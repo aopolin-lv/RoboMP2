@@ -13,5 +13,9 @@
 
 3. Change the OpenAI API-key in *data_process/gptutils.py*
 
-4. run the *eval.py*.
+4. Put the path of SentenseBert in *retrieval/similarity_retirval.py*
+
+5. Put the path of MMLM in *model/custom_model.py*
+
+6. run the *eval.py*.
 
