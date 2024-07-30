@@ -1,0 +1,158 @@
+{
+    "visual_manipulation": [
+        "GetObsImage",
+        "MMPROBO.generate",
+        "MMPROBO.generate",
+        "PickPlace",
+        "RobotExecution"
+    ],
+    "scene_understanding": [
+        "GetObsImage",
+        "GetSceneImage",
+        "GetAllObjectsFromImage",
+        "GetAllObjectsFromPromptImage",
+        "SelectFromScene",
+        "MMPROBO.generate",
+        "PickPlace",
+        "RobotExecution"
+    ],
+    "rotate": [
+        "GetObsImage",
+        "MMPROBO.generate",
+        "PickPlace",
+        "RobotExecution"
+    ],
+    "rearrange": [
+        "GetObsImage",
+        "GetSceneImage",
+        "GetAllObjectsFromImage",
+        "GetAllObjectsFromPromptImage",
+        "DistractorActions",
+        "RearrangeActions",
+        "RobotExecution"
+    ],
+    "rearrange_then_restore": [
+        "GetObsImage",
+        "GetSceneImage",
+        "GetAllObjectsFromImage",
+        "GetAllObjectsFromPromptImage",
+        "DistractorActions",
+        "RearrangeActions",
+        "RearrangeActions",
+        "RobotExecution"
+    ],
+    "novel_adj": [
+        "GetObsImage",
+        "GetPromptImages",
+        "GetPromptAssets",
+        "GetWholeTask",
+        "GetReverse",
+        "RecAdj",
+        "SelectObj",
+        "GetDragObjName",
+        "GetSameShapeObjectsAsObject",
+        "GetSameShapeObjectsAsObject",
+        "GetBaseObjName",
+        "MMPROBO.generate",
+        "PickPlace",
+        "RobotExecution"
+    ],
+    "novel_noun": [
+        "GetObsImage",
+        "GetPromptAssets",
+        "GetDragObjName",
+        "MMPROBO.generate",
+        "GetBaseObjName",
+        "MMPROBO.generate",
+        "PickPlace",
+        "RobotExecution"
+    ],
+    "novel_adj_and_noun": [
+        "GetObsImage",
+        "GetPromptImages",
+        "GetPromptAssets",
+        "GetWholeTask",
+        "GetReverse",
+        "RecAdj",
+        "SelectObj",
+        "GetDragObjName",
+        "GetSameShapeObjectsAsObject",
+        "GetSameShapeObjectsAsObject",
+        "GetBaseObjName",
+        "MMPROBO.generate",
+        "PickPlace",
+        "RobotExecution"
+    ],
+    "twist": [
+        "GetObsImage",
+        "GetPromptImages",
+        "GetObjectsWtihGivenTexture",
+        "RecDegree",
+        "RotateAll",
+        "RobotExecution"
+    ],
+    "follow_motion": [
+        "GetObsImage",
+        "GetPromptImages",
+        "GetStepsLocForObject",
+        "PickPlace",
+        "PickPlace",
+        "RobotExecution"
+    ],
+    "follow_order": [
+        "GetObsImage",
+        "GetPromptImages",
+        "GetPromptImage",
+        "GetAllObjextsStepsLoc",
+        "PlanOrder",
+        "RobotExecution"
+    ],
+    "sweep_without_exceeding": [
+        "GetObsImage",
+        "GetPromptImage",
+        "GetPromptAssets",
+        "GetSweptAndBoundaryName",
+        "MMPROBO.generate",
+        "MMPROBO.generate",
+        "MMPROBO.generate",
+        "GetTimes",
+        "CalculateValidArea",
+        "Sorted",
+        "MultiPPWithConstrain",
+        "RobotExecution",
+        "GetWholeTask"
+    ],
+    "same_texture": [
+        "GetObsImage",
+        "GetAllSameTextureObjects",
+        "MMPROBO.generate",
+        "MultiPPWithSame",
+        "RobotExecution"
+    ],
+    "same_shape": [
+        "GetObsImage",
+        "GetAllSameProfileObjects",
+        "MMPROBO.generate",
+        "MultiPPWithSame",
+        "RobotExecution"
+    ],
+    "manipulate_old_neighbor": [
+        "GetObsImage",
+        "MMPROBO.generate",
+        "MMPROBO.generate",
+        "MMPROBO.generate",
+        "PickPlace",
+        "PickPlace",
+        "RobotExecution"
+    ],
+    "pick_in_order_then_restore": [
+        "GetObsImage",
+        "MMPROBO.generate",
+        "MMPROBO.generate",
+        "MMPROBO.generate",
+        "PickPlace",
+        "PickPlace",
+        "PickPlace",
+        "RobotExecution"
+    ]
+}

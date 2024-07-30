@@ -1,0 +1,61 @@
+In a robotic scenario, the task is set to be accomplished through the robotic arm for various gripping tasks.
+Give you some task instructions and their corresponding original template lists. They are instructions and templates in the context of robotics.
+You need to analyze and generate the original template corresponding to a given new task instruction according to the rules given in the examples.
+Note! You are ONLY allowed to generate the original template without any other words.
+
+Examples:
+
+    Instruction:"Put the red swirl block into the purple container."
+    template:"Put the {object1} into the {object2}."
+
+    Instruction:"Put the red swirl object in scene into the purple object."
+    template:"Put the {texture1} object in {scene} into the {texture2} object."
+
+    Instruction:"Rotate the yellow and green stripe letter V 30 degrees."
+    template:"Rotate the {dragged_obj} 30 degrees."
+
+    Instruction:"Rearrange to this scene."
+    template:"Rearrange to this {scene}.",
+
+    Instruction:"Rearrange objects to this setup scene and then restore."
+    template:"Rearrange to this {scene} then restore.",
+
+    Instruction:"green and blue polka dot L-shaped block is daxer than green and blue polka dot L-shaped block.dark yellow and blue polka dot letter V is daxer than dark yellow and blue polka dot letter V.red and green polka dot ring is daxer than red and green polka dot ring.Put the daxer gray letter A into the gray square."
+    template:"{demo object1} is {novel adj} than {demo object2}. Put the {novel adj} {object1} into the {object2}.",
+
+    Instruction:"This is a dax gray bowl.This is a blicket gray flower.Put a blicket into a dax."
+    template:"This is a {novel name1} {object1} . This is a {novel name2} {object2}. Put {novel name1} into a {novel name2}."
+
+    Instruction:"This is a blicket gray bowl.This is a zup gray hexagon.dark yellow and blue polka dot pentagon is daxer than dark yellow and blue polka dot pentagon.pink round is daxer than pink round.dark yellow and purple stripe letter M is daxer than dark yellow and purple stripe letter M.Put the daxer zup into the blicket."
+    template:""This is a {novel name1} {object1}. This is a {novel name2} {object2}. {demo object1} is {adj} than {demo object2}. Put the {novel adj} {novel name}1 into the {novel name2}.","
+
+    Instruction:"Twist" is defined as rotating object a specific angle .For examples: From scene to scene .From scene to scene .From scene to scene .Now twist all yellow and blue polka dot objects .
+    template:"\"Twist\" is defined as rotating object a specific angle. For examples: From {before twisti} to {after twisti}. Now twist all {texture} objects.",
+
+    Instruction:"Follow this motion for green paisley L-shaped block : scene scene scene."
+    template:"Follow this motion for {object}:  {frame1} ...{framei} ... {framen}.",
+
+    Instruction:"Stack objects in this order scene scene scene."
+    template:"Stack objects in this order {frame1}...{framei}...{framen}.",
+
+    Instruction:"Sweep two yellow and blue polka dot small block into red and blue stripe three-sided rectangle without exceeding yellow and blue stripe line."
+    template:"Sweep {quantifier} {object} into {bounds} without exceeding {constraint}."
+
+    Instruction:"Sweep one yellow and blue stripe small block into purple swirl three-sided rectangle without touching red paisley line."
+    template:"Sweep {quantifier} {swept_obj} into {bounds} without touching {constraint}."
+
+    Instruction:"Put all objects with the same texture as red paisley square into it."
+    template:"Put all objects with the same texture as {object} into it.",
+
+    Instruction:"Put all objects with the same profile as red and blue stripe square into it ."
+    template:"Put all objects with the same shape as {object} into it.",
+
+    Instruction:"First put red and blue polka dot pentagon into green and purple polka dot frame then put the object that was previously at its east into the same green and purple polka dot frame ."
+    template:"First put {object1} into {object2} then put the object that was previously at its {direction} into the same {object2}.",
+
+    Instruction:"Put red paisley block into green and purple stripe container then red and blue stripe container .Finally restore it into its original container ."
+    template:"Put {object1} into {object2} then {object3}. Finally restore it into its original container."
+
+The given instruction: Insert your instruction.
+Its original template:
+
