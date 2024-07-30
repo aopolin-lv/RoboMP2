@@ -1,0 +1,648 @@
+[
+    {
+        "instruction": "# Instruction: Put the {object1} into the {object2}.\n",
+        "template": [
+            "\n",
+            "    # 1. Get top_image from observation\n",
+            "    top_image, _ = GetObsImage(obs)\n",
+            "\n",
+            "    # 2. Get the coordinate of object1\n",
+            "    drag_obj_loc = MMPROBO.generate(image=top_image, query='object1')\n",
+            "\n",
+            "    # 3. Get the coordinate of object2\n",
+            "    base_obj_loc = MMPROBO.generate(image=top_image, query='object2')\n",
+            "\n",
+            "    # 4. Pick object from drag_obj_loc and place it to base_obj_loc\n",
+            "    action = PickPlace(pick=drag_obj_loc, place=base_obj_loc, bounds=BOUNDS)\n",
+            "\n",
+            "    info = RobotExecution(action=action)\n"
+        ],
+        "annotation": "    \"\"\"Execute the given instructions of placing the object1 into the object2\"\"\"\n"
+    },
+    {
+        "instruction": "# Instruction: Put the {texture1} object in {scene} into the {texture2} object.\n",
+        "template": [
+            "\n",
+            "    # 1. Get top_image from observation\n",
+            "    top_image, _ = GetObsImage(obs)\n",
+            "\n",
+            "    # 2. Get scene_image by using GetPromptImage method\n",
+            "    scene_image = GetSceneImage(all_images=all_images)\n",
+            "\n",
+            "    # 3. Get all objects from top_image.\n",
+            "    obs_obj_dict = GetAllObjectsFromImage(image=top_image)\n",
+            "\n",
+            "    # 4. Get all objects from scene_image.\n",
+            "    scene_obj_dict = GetAllObjectsFromPromptImage(image=scene_image)\n",
+            "\n",
+            "    # 5. Get the coordinate of drag_obj_loc \n",
+            "    drag_obj_loc = SelectFromScene(obs_obj_dict=obs_obj_dict, scene_obj_dict=scene_obj_dict, texture='texture1')\n",
+            "\n",
+            "    # 6. Get the coordinate of base_obj_loc \n",
+            "    base_obj_loc = MMPROBO.generate(image=top_image, query='the texture2 object')\n",
+            "\n",
+            "    # 7. Pick object from drag_obj_loc and place it to base_obj_loc\n",
+            "    action = PickPlace(pick=drag_obj_loc, place=base_obj_loc, bounds=BOUNDS)\n",
+            "\n",
+            "    info = RobotExecution(action=action)\n"
+        ],
+        "annotation": "    \"\"\"Execute the given instructions of placing texture1 object in scene into the texture2 object. \"\"\"\n"
+    },
+    {
+        "instruction": "# Instruction: Rotate the {dragged_obj} 150 degrees.\n",
+        "template": [
+            "\n",
+            "    # 1. Get top_image from observation\n",
+            "    top_image, _ = GetObsImage(obs)\n",
+            "\n",
+            "    # 2. Get the coordinate of dragged_obj\n",
+            "    rotate_obj_loc = MMPROBO.generate(image=image, query='dragged_obj')\n",
+            "\n",
+            "    # 3. Pick objecct from rotate_obj_loc and rotate yaw_angle degrees\n",
+            "    action = PickPlace(pick=rotate_obj_loc, place=rotate_obj_loc, bounds=BOUNDS, yaw_angle=150, degrees=True)\n",
+            "\n",
+            "    info = RobotExecution(action=action)\n"
+        ],
+        "annotation": "    \"\"\"Execute the given instructions of rotating the {dragged_obj} 150 degrees\"\"\"\n"
+    },
+    {
+        "instruction": "# Instruction: Rearrange to this {scene}.\n",
+        "template": [
+            "\n",
+            "    # 1. Get top_image from observation\n",
+            "    top_image, _ = GetObsImage(obs)\n",
+            "\n",
+            "    # 2. Get scene_image by using GetSceneImage method\n",
+            "    scene_image = GetSceneImage(all_images=all_images)\n",
+            "\n",
+            "    # 3. Get all objects from top_image\n",
+            "    obs_obj_dict = GetAllObjectsFromImage(image=top_image)\n",
+            "\n",
+            "    # 4. Get all objects from scene_image\n",
+            "    scene_obj_dict = GetAllObjectsFromPromptImage(image=scene_image)\n",
+            "\n",
+            "    # 5. Get the distractor_action\n",
+            "    distractor_action = DistractorActions(source=obs_obj_dict, target=scene_obj_dict, bounds=BOUNDS)\n",
+            "\n",
+            "    # 6. Get the rearrange_action\n",
+            "    rearrange_action = RearrangeActions(source=obs_obj_dict, target=scene_obj_dict, bounds=BOUNDS)\n",
+            "\n",
+            "    # 7. Get all the actions\n",
+            "    actions = []\n",
+            "    actions.extend(distractor_action).extend(rearrange_action)\n",
+            "    info = RobotExecution(action=actions)\n"
+        ],
+        "annotation": "    \"\"\"Execute the given instructions of rearranging the objects to match the objects in the given scene\"\"\"\n"
+    },
+    {
+        "instruction": "# Instruction: Rearrange to this {scene} then restore.\n",
+        "template": [
+            "\n",
+            "    # 1. Get top_image from observation\n",
+            "    top_image, _ = GetObsImage(obs)\n",
+            "\n",
+            "    # 2. Get scene_image by using GetPromptImage method. \n",
+            "    scene_image = GetSceneImage(all_images=all_images)\n",
+            "\n",
+            "    # 3. Get all objects from top_image.\n",
+            "    obs_obj_dict = GetAllObjectsFromImage(image=top_image)\n",
+            "\n",
+            "    # 4. Get all objects from scene_image.\n",
+            "    scene_obj_dict = GetAllObjectsFromPromptImage(image=scene_image)\n",
+            "\n",
+            "    # 5. Get the distractor_action\n",
+            "    distractor_action = DistractorActions(source=obs_obj_dict, target=scene_obj_dict, bounds=BOUNDS)\n",
+            "\n",
+            "    # 6. Get the rearrange_action\n",
+            "    rearrange_action = RearrangeActions(source=obs_obj_dict, target=scene_obj_dict, bounds=BOUNDS)\n",
+            "\n",
+            "    # 7. Get the restore_action\n",
+            "    restore_action = RearrangeActions(source=scene_obj_dict, target=obs_obj_dict, bounds=BOUNDS)\n",
+            "\n",
+            "    # 8. Get all the actions.\n",
+            "    actions = []\n",
+            "    actions.extend(distractor_action).extend(rearrange_action).extend(restore_action)\n",
+            "    info = RobotExecution(action=actions)\n"
+        ],
+        "annotation": "    \"\"\"Execute the given instructions of rearranging the objects to match the objects in the given scene, and then restore it\"\"\"\n"
+    },
+    {
+        "instruction": "# Instruction: {demo object1} is {novel adj} than {demo object2}. {demo object3} is {novel adj} than {demo object4}. {demo object5} is {novel adj} than {demo object6} Put the {adv} {novel adj} {object1} into the {object2}.\n",
+        "template": [
+            "\n",
+            "    # 1. Get top_image and front_image from observation.\n",
+            "    top_image, front_image = GetObsImage(obs)\n",
+            "\n",
+            "    # 2. Get the prompt_images by using GetPromptImages(all_images=all_images).\n",
+            "    prompt_images = GetPromptImages(all_images=all_images)\n",
+            "\n",
+            "    # 3. Get the prompt_assets\n",
+            "    prompt_assets = GetPromptAssets(prompt_assets=prompt_assets)\n",
+            "\n",
+            "    # 4. Get the whole_task, \n",
+            "    whole_task = GetWholeTask(whole_task=whole_task)\n",
+            "\n",
+            "    # 5. If the whole_task contains 'less', is_reverse is set to True, else set to False. \n",
+            "    is_reverse = GetReverse(whole_task=whole_task)\n",
+            "\n",
+            "    # 6. Recognize the novel adj according to prompt_images and is_reverse\n",
+            "    novel_adj = RecAdj(prompt_images=prompt_images, is_reverse=is_reverse)\n",
+            "\n",
+            "    # 7. Get the prompt_drag_obj_name\n",
+            "    prompt_drag_obj_name = GetDragObjName(prompt_assets=prompt_assets)\n",
+            "\n",
+            "    # 8. Get all objects with the same shape as object1 from image\n",
+            "    drag_objs_top_loc = GetSameShapeObjectsAsObject(image=top_image, query=prompt_drag_obj_name)\n",
+            "\n",
+            "    # 9. Get all objects with the same shape as object1 from front_image\n",
+            "    drag_objs_front_loc = GetSameShapeObjectsAsObject(image=front_image, query=prompt_drag_obj_name)\n",
+            "\n",
+            "    # 10. Use the SelectObj function to recognize drag_objs_top_loc according to drag_objs_top_loc and drag_objs_front_loc. \n",
+            "    drag_objs_top_loc=SelectObj(front_image=front_image, drag_objs_top_loc=drag_objs_top_loc, drag_objs_front_loc=drag_objs_front_loc, novel_adj=novel_adj)\n",
+            "\n",
+            "    # 11. Get the prompt_base_obj_name from image\n",
+            "    prompt_base_obj_name = GetBaseObjName(prompt_assets=prompt_assets)\n",
+            "\n",
+            "    # 12. Get the coordinate of prompt_base_obj_name\n",
+            "    base_obj_loc = MMPROBO.generate(image=top_image, query=prompt_base_obj_name)\n",
+            "\n",
+            "    # 13. Pick object from drag_objs_top_loc and place it to base_obj_loc\n",
+            "    action = PickPlace(pick=drag_objs_top_loc, place=base_obj_loc, bounds=BOUNDS)\n",
+            "\n",
+            "    info = RobotExecution(action=action)\n"
+        ],
+        "annotation": "    \"\"\"Execute the given instructions of place the adv novel adj object1 to object2. You need to carefully follow the example codes and each line is necessary for you to complete the task! The shape of the adv novel adj object1 is the same as object1.\"\"\"\n"
+    },
+    {
+        "instruction": "# Instruction: This is a {novel name1} {object1} . This is a {novel name2} {object2}. Put {novel name1} into a {novel name2}.\n",
+        "template": [
+            "\n",
+            "    # 1. Get top_image and front_image from observation.\n",
+            "    top_image, front_image = GetObsImage(obs)\n",
+            "\n",
+            "    # 2. Get the prompt_assets\n",
+            "    prompt_assets = GetPromptAssets(prompt_assets=prompt_assets)\n",
+            "\n",
+            "    # 3. Get the name of {novel name1} {object1} by using GetDragObjName method. \n",
+            "    prompt_drag_obj_name = GetDragObjName(prompt_assets=prompt_assets)\n",
+            "\n",
+            "    # 4. Get the coordinate of prompt_drag_obj_name by the following code\n",
+            "    prompt_drag_obj_loc = MMPROBO.generate(image=top_image, query=prompt_drag_obj_name)\n",
+            "\n",
+            "    # 5. Get the name of {novel name2} {object2} by using GetBaseObjName method. \n",
+            "    prompt_base_obj_name = GetBaseObjName(prompt_assets=prompt_assets)\n",
+            "\n",
+            "    # 6. Get the coordinate of prompt_base_obj_name by the following code\n",
+            "    prompt_base_obj_loc = MMPROBO.generate(image=top_image, query=prompt_base_obj_name)\n",
+            "\n",
+            "    # 7. Pick object from prompt_drag_obj_loc and place it to prompt_base_obj_loc\n",
+            "    action = PickPlace(pick=prompt_drag_obj_loc, place=prompt_base_obj_loc, bounds=BOUNDS)\n",
+            "\n",
+            "    info = RobotExecution(action=action)\n"
+        ],
+        "annotation": "    \"\"\"Execute the given instructions of place the novel noun object1 to object2. Note,novel name1 and novel name2 are faked names\"\"\"\n"
+    },
+    {
+        "instruction": "# Instruction: This is a {novel name1} {object1}. This is a {novel name2} {object2}. {demo object1} is {adj} than {demo object2}. {demo object3} is {adj} than {demo object4}. Put the {adv} {novel adj} {novel name}1 into the {novel name2}.\n",
+        "template": [
+            "\n",
+            "    # 1. Get top_image and front_image from observation.\n",
+            "    top_image, front_image = GetObsImage(obs)\n",
+            "\n",
+            "    # 2. Get the prompt_images by using GetPromptImages(all_images=all_images). \n",
+            "    prompt_images = GetPromptImages(all_images=all_images)\n",
+            "\n",
+            "    # 3. Get the prompt_assets\n",
+            "    prompt_assets = GetPromptAssets(prompt_assets=prompt_assets)\n",
+            "\n",
+            "    # 4. Get the whole_task, \n",
+            "    whole_task = GetWholeTask(whole_task=whole_task)\n",
+            "\n",
+            "    # 5. If the whole_task contains 'less', is_reverse is set to True, else set to False. \n",
+            "    is_reverse = GetReverse(whole_task=whole_task)\n",
+            "\n",
+            "    # 6.Recognize the novel adj according to prompt_images and is_reverse\n",
+            "    novel_adj = RecAdj(prompt_images=prompt_images, is_reverse=is_reverse)\n",
+            "\n",
+            "    # 7. Get the prompt_drag_obj_name\n",
+            "    prompt_drag_obj_name = GetDragObjName(prompt_assets=prompt_assets)\n",
+            "\n",
+            "    # 8. Get all objects with the same shape as object1 from image\n",
+            "    drag_objs_top_loc = GetSameShapeObjectsAsObject(image=top_image, query=prompt_drag_obj_name)\n",
+            "\n",
+            "    # 9. Get all objects with the same shape as object1 from front_image\n",
+            "    drag_objs_front_loc = GetSameShapeObjectsAsObject(image=front_image, query=prompt_drag_obj_name)\n",
+            "\n",
+            "    # 10. Use the SelectObj function to recognize drag_objs_top_loc according to drag_objs_top_loc and drag_objs_front_loc. \n",
+            "    drag_objs_top_loc=SelectObj(front_image=front_image, drag_objs_top_loc=drag_objs_top_loc, drag_objs_front_loc=drag_objs_front_loc, novel_adj=novel_adj)\n",
+            "\n",
+            "    # 11. Get the prompt_base_obj_name from image\n",
+            "    prompt_base_obj_name = GetBaseObjName(prompt_assets=prompt_assets)\n",
+            "\n",
+            "    # 12. Get the coordinate of prompt_base_obj_name\n",
+            "    base_obj_loc = MMPROBO.generate(image=top_image, query=prompt_base_obj_name)\n",
+            "\n",
+            "    # 13. Pick object from drag_objs_top_loc and place it to base_obj_loc\n",
+            "    action = PickPlace(pick=drag_objs_top_loc, place=base_obj_loc, bounds=BOUNDS)\n",
+            "\n",
+            "    info = RobotExecution(action=action)\n"
+        ],
+        "annotation": "    \"\"\"Execute the given instructions of place the adv novel adj object1 to object2. You need to carefully follow the example codes and each line is necessary for you to complate the task! The shape of the adv novel adj object1 is the same as object1. \"\"\"\n"
+    },
+    {
+        "instruction": "# Instruction: \"Twist\" is defined as rotating object a specific angle. For examples: From {before twisti} to {after twisti}. Now twist all {texture} objects.\n",
+        "template": [
+            "\n",
+            "    # 1. Get top_image from observation\n",
+            "    top_image, _ = GetObsImage(obs)\n",
+            "\n",
+            "    # 2. Get the prompt_images by using GetPromptImages(all_images=all_images). \n",
+            "    prompt_images = GetPromptImages(all_images=all_images)\n",
+            "    \n",
+            "    # 3. Get all objects with the same texture as {texture} from the top_image.'\n",
+            "    twist_objs_loc = GetObjectsWtihGivenTexture(image=top_image, query='texture')\n",
+            "\n",
+            "    # 4. Recognize the degree\n",
+            "    degree = RecDegree(prompt_images)\n",
+            "    \n",
+            "    # 5. Rotate all twist_objs_loc for degree\n",
+            "    actions = RotateAll(obj_list=twist_objs_loc, degree=degree, bounds=BOUNDS)\n",
+            "\n",
+            "    info = RobotExecution(action=actions)\n"
+        ],
+        "annotation": "    \"\"\"Execute the given instructions of twist all {texture} objects\"\"\"\n"
+    },
+    {
+        "instruction": "# Instruction: Follow this motion for {object}:  {frame1} ...{framei} ... {framen}. \n",
+        "template": [
+            "\n",
+            "    # 1. Get top_image from observation\n",
+            "    top_image, _ = GetObsImage(obs)\n",
+            "\n",
+            "    # 2. Get the prompt_images by using GetPromptImages(all_images=all_images). \n",
+            "    prompt_images = GetPromptImages(all_images=all_images)\n",
+            "\n",
+            "    # 3. Get the step0_loc, step1_loc, step2_loc by using GetStepsLocForObject.\n",
+            "    step0_loc, step1_loc, step2_loc = GetStepsLocForObject(image=prompt_images, query='object')\n",
+            "    \n",
+            "    # 4. Get the step1_action Just use step0_loc and step1_loc\n",
+            "    step1_action = PickPlace(pick=step0_loc, place=step1_loc, bounds=BOUNDS)\n",
+            "\n",
+            "    # 5. Get the step2_action Just use step1_loc and step2_loc\n",
+            "    step2_action = PickPlace(pick=step1_loc, place=step2_loc, bounds=BOUNDS)\n",
+            "\n",
+            "    actions = []\n",
+            "    actions.extend(step1_action).extend(step2_action)\n",
+            "    info = RobotExecution(action=actions)\n"
+        ],
+        "annotation": "    \"\"\"Execute the given instructions of placing object via following the given frames.\"\"\"\n"
+    },
+    {
+        "instruction": "# Instruction: Stack objects in this order {frame1}...{framei}...{framen}. \n",
+        "template": [
+            "\n",
+            "    # 1. Get top_image from observation\n",
+            "    top_image, _ = GetObsImage(obs)\n",
+            "\n",
+            "    # 2. Get the prompt_images by using GetPromptImages(all_images=all_images)\n",
+            "    prompt_images = GetPromptImages(all_images=all_images)\n",
+            "\n",
+            "    # 3. Get the step0_objs_loc, step1_objs_loc, step2_objs_loc by using GetAllObjextsStepsLoc.\n",
+            "    step0_objs_loc, step1_objs_loc, step2_objs_loc = GetAllObjextsStepsLoc(image=prompt_images)\n",
+            "\n",
+            "    # 4. Get actions by using PlanOrder method!\n",
+            "    actions = PlanOrder(step0_objs_loc=step0_objs_loc, step1_objs_loc=step1_objs_loc, step2_objs_loc=step2_objs_loc, bounds=BOUNDS)\n",
+            "\n",
+            "    info = RobotExecution(action=actions)\n"
+        ],
+        "annotation": "    \"\"\"Execute the given instructions of stacking objects in the order of following frames.\"\"\"\n"
+    },
+    {
+        "instruction": "# Instruction: Sweep {quantifier} {object} into {bounds} without exceeding {constraint}. \n",
+        "template": [
+            "\n",
+            "    # 1. Get top_image from observation\n",
+            "    top_image, _ = GetObsImage(obs)\n",
+            "\n",
+            "    # 2. Get the prompt_assets.\n",
+            "    prompt_assets = GetPromptAssets(prompt_assets=prompt_assets)\n",
+            "\n",
+            "    # 3. You can only get swept_obj_name, bounds_name and constraint_name from prompt_assets by using GetSweptAndBoundaryName function.\n",
+            "    swept_obj_name, bounds_name, constraint_name = GetSweptAndBoundaryName(prompt_assets=prompt_assets)\n",
+            "\n",
+            "    # 4. Get the coordinate of swept_obj_name\n",
+            "    sweep_objs = MMPROBO.generate(image=top_image, query=swept_obj_name)\n",
+            "\n",
+            "    # 5. Get the coordinate of bounds_name\n",
+            "    boundary = MMPROBO.generate(image=top_image, query=bounds_name)\n",
+            "\n",
+            "    # 6. Get the coordinate of constraint_name\n",
+            "    constraint = MMPROBO.generate(image=top_image, query=constraint_name)\n",
+            "\n",
+            "    # 7. Get the whole_task\n",
+            "    whole_task = GetWholeTask(whole_task=whole_task)\n",
+            "\n",
+            "    # 8. Get the object numbers by using GetTimes\n",
+            "    times = GetTimes(whole_task=whole_task)\n",
+            "\n",
+            "    # 9. Calculate the valid_area and target_table\n",
+            "    valid_area, target_table = CalculateValidArea(boundary=boundary, constraint=constraint)\n",
+            "\n",
+            "    # 10. Use the sorted method to sort sweep_objs.\n",
+            "    sweep_objs = Sorted(sweep_objs=sweep_objs, valid_area=valid_area)\n",
+            "\n",
+            "    # 11. Achieve multiple placement actions.\n",
+            "    actions = MultiPPWithConstrain(picks=sweep_objs, target_table=target_table, bounds=BOUNDS, times=times)\n",
+            "\n",
+            "    info = RobotExecution(action=actions)\n"
+        ],
+        "annotation": "    \"\"\"Execute the given instructions of sweeping the designated number of objects into a specified region without exceeding the constraint. You need to carefully follow the example codes and each line is necessary for you to complate the task! {quantifier} is a string from instruction, its possible value is any, all, one, two, three, four, five.\"\"\"\n"
+    },
+    {
+        "instruction": "# Instruction: Put all objects with the same texture as {object} into it.\n",
+        "template": [
+            "\n",
+            "    # 1. Get top_image from observation\n",
+            "    top_image, _ = GetObsImage(obs)\n",
+            "\n",
+            "    # 2. Get all same texture objects in top_image by using GetAllSameTextureObjects.\n",
+            "    same_texture_objs_loc = GetAllSameTextureObjects(image=top_image, query='object')\n",
+            "\n",
+            "    # 3. Get the coordinate of {object}\n",
+            "    base_obj_loc = MMPROBO.generate(image=top_image, query='object')\n",
+            "\n",
+            "    # 4. Get actions by using MultiPPWithSame.\n",
+            "    actions = MultiPPWithSame(picks=same_texture_objs_loc, place=base_obj_loc, bounds=BOUNDS)\n",
+            "\n",
+            "    info = RobotExecution(action=actions)\n"
+        ],
+        "annotation": "    \"\"\"Execute the given instructions of putting all objects with the same texture as {object} into it\"\"\"\n"
+    },
+    {
+        "instruction": "# Instruction: Put all objects with the same profile as {object} into it.\n",
+        "template": [
+            "\n",
+            "    # 1. Get top_image from observation\n",
+            "    top_image, _ = GetObsImage(obs)\n",
+            "\n",
+            "    # 2. Get all same profile objects from top_image by using GetAllSameProfileObjects.\n",
+            "    same_profile_objs_loc = GetAllSameProfileObjects(image=top_image, query='object')\n",
+            "\n",
+            "    # 3. Get the coordinate of {object}\n",
+            "    base_obj_loc = MMPROBO.generate(image=top_image, query='object')\n",
+            "\n",
+            "    # 4. Get actions by using MultiPPWithSame.\n",
+            "    actions = MultiPPWithSame(picks=same_profile_objs_loc, place=base_obj_loc, bounds=BOUNDS)\n",
+            "\n",
+            "    info = RobotExecution(action=actions)\n"
+        ],
+        "annotation": "    \"\"\"Execute the given instructions of putting all objects with the same profile as {object} into it.\"\"\"\n"
+    },
+    {
+        "instruction": "# Instruction: First put {object1} into {object2} then put the object that was previously at its {direction} into the same {object2}. \n",
+        "template": [
+            "\n",
+            "    # 1. Get top_image from observation\n",
+            "    top_image, _ = GetObsImage(obs)\n",
+            "\n",
+            "    # 2. Get the coordinate of {object1}\n",
+            "    drag_objs_loc = MMPROBO.generate(image=image, query='object1')\n",
+            "\n",
+            "    # 3. Get the coordinate of {object2}\n",
+            "    base_obj_loc = MMPROBO.generate(image=image, query='object2')\n",
+            "\n",
+            "    # 4. Get the coordinate of the object on the direction side of object1,the direction coms from {direction}!\n",
+            "    neighbor_obj_loc = MMPROBO.generate(image=image, query='the object on the direction side of object1')\n",
+            "\n",
+            "    # 5. Pick object from drag_objs_loc and place it to base_obj_loc\n",
+            "    step1_action = PickPlace(pick=drag_objs_loc, place=base_obj_loc, bounds=BOUNDS)\n",
+            "\n",
+            "    # 6. Pick object from neighbor_obj_loc and place it to base_obj_loc\n",
+            "    step2_action = PickPlace(pick=neighbor_obj_loc, place=base_obj_loc, bounds=BOUNDS)\n",
+            "\n",
+            "    actions = []\n",
+            "    actions.extend(step1_action).extend(step2_action)\n",
+            "    info = RobotExecution(action=actions)\n"
+        ],
+        "annotation": "    \"\"\"Execute the given instructions of first putting object1 into object2 then putting the object that was previously at its direction into the same object2.\"\"\"\n"
+    },
+    {
+        "instruction": "# Instruction: Put {object1} into {object2} then {object3}. Finally restore it into its original container.\n",
+        "template": [
+            "\n",
+            "    # 1. Get top_image from observation\n",
+            "    top_image, _ = GetObsImage(obs)\n",
+            "\n",
+            "    # 2. Get the coordinate of {object1}\n",
+            "    drag_obj_loc = MMPROBO.generate(image=image, query='object1')\n",
+            "\n",
+            "    # 3. Get the coordinate of {object2}\n",
+            "    base1_obj_loc = MMPROBO.generate(image=image, query='object2')\n",
+            "\n",
+            "    # 4. Get the coordinate of {object3}\n",
+            "    base2_obj_loc = MMPROBO.generate(image=image, query='object3')\n",
+            "\n",
+            "    # 5. Set the original_container_loc according to drag_obj_loc\n",
+            "    original_container_loc = drag_obj_loc\n",
+            "\n",
+            "    # 6. Pick object from drag_obj_loc and place it to base1_obj_loc\n",
+            "    step1_action = PickPlace(pick=drag_obj_loc, place=base1_obj_loc, bounds=BOUNDS)\n",
+            "\n",
+            "    # 7. Pick object from base1_obj_loc and place it to base2_obj_loc\n",
+            "    step2_action = PickPlace(pick=base1_obj_loc, place=base2_obj_loc, bounds=BOUNDS)\n",
+            "\n",
+            "    # 8. Pick object from base2_obj_loc and place it to original_container_loc\n",
+            "    step3_action = PickPlace(pick=base2_obj_loc, place=original_container_loc, bounds=BOUNDS)\n",
+            "\n",
+            "    actions = []\n",
+            "    actions.extend(step1_action).extend(step2_action).extend(step3_action)\n",
+            "    info = RobotExecution(action=actions)\n"
+        ],
+        "annotation": "    \"\"\"Execute the given instructions of putting object1 into object2 then object3. Finally restore it into its original container.\"\"\"\n"
+    },
+    {
+        "instruction": " Clean the {Fork} at the {Sink}.",
+        "annotation": " \"\"\"Wash the Fork using the Sink and Faucet\"\"\"",
+        "template": "def wash_fork():\n    # 0: SubTask 1: Wash the Fork\n    # 1: Go to the Fork.\n    GoToObject('Fork')\n    # 2: Pick up the Fork.\n    PickupObject('Fork')\n    # 3: Go to the Sink.\n    GoToObject('Sink')\n    # 4: Put the Fork inside the Sink\n    PutObject('Fork', 'Sink')\n    # 5: Switch on the Faucet to clean the Fork\n    SwitchOn('Faucet')\n    # 6: Wait for a while to let the Fork clean.\n    time.sleep(5)\n    # 7: Switch off the Faucet\n    SwitchOff('Faucet')\n"
+    },
+    {
+        "instruction": " Clean the {Fork} at the {Sink}.",
+        "annotation": " \"\"\"Complete the task of washing the Fork at the Sink\"\"\"",
+        "template": "def wash_fork(robot_list):\n    # robot_list = [robot1]\n    # 0: SubTask 2: Wash the Fork\n    # 1: Go to the Fork using robot1.\n    GoToObject(robot_list[0],'Fork')\n    # 2: Pick up the Fork using robot1.\n    PickupObject(robot_list[0],'Fork')\n    # 3: Go to the Sink using robot1.\n    GoToObject(robot_list[0],'Sink')\n    # 4: Put the Fork inside the Sink using robot1\n    PutObject(robot_list[0],'Fork', 'Sink')\n    # 5: Switch on the Faucet to clean the Fork using robot1\n    SwitchOn(robot_list[0],'Faucet')\n    # 6: Wait for a while to let the Fork clean using robot1.\n    time.sleep(5)\n    # 7: Switch off the Faucet using robot1\n    SwitchOff(robot_list[0],'Faucet')\n"
+    },
+    {
+        "instruction": " Store the {Tomato} in the {Fridge}.",
+        "annotation": " \"\"\"Complete the task of placing Tomato inside the Fridge\"\"\"",
+        "template": "def put_tomato_in_fridge():\n    # 0: SubTask 1: Put Tomato in Fridge\n    # 1: Go to the Tomato.\n    GoToObject('Tomato')\n    # 2: Pick up the Tomato.\n    PickupObject('Tomato')\n    # 3: Go to the Fridge.\n    GoToObject('Fridge')\n    # 4: Open the Fridge.\n    OpenObject('Fridge')\n    # 5: Put the Tomato in the Fridge.\n    PutObject('Tomato', 'Fridge')\n    # 6: Close the Fridge.\n    CloseObject('Fridge')\n"
+    },
+    {
+        "instruction": " Store the {Tomato} inside the {Fridge}.",
+        "annotation": " \"\"\"Manipulate Tomato to be stored inside the Fridge\"\"\"",
+        "template": "def put_tomato_in_fridge(robot_list):\n    # robot_list = [robot1]\n    # 0: SubTask 1: Put Tomato in Fridge\n    # 1: Go to the Tomato using robot1.\n    GoToObject(robot_list,'Tomato')\n    # 2: Pick up the Tomato using robot1.\n    PickupObject(robot_list,'Tomato')\n    # 3: Go to the Fridge using robot1.\n    GoToObject(robot_list,'Fridge')\n    # 4: Open the Fridge using robot1.\n    OpenObject(robot_list,'Fridge')\n    # 5: Put the Tomato in the Fridge using robot1.\n    PutObject(robot_list,'Tomato', 'Fridge')\n    # 6: Close the Fridge using robot1.\n    CloseObject(robot_list,'Fridge')\n"
+    },
+    {
+        "instruction": " Slice the {Potato} and place the knife on the {CounterTop}.",
+        "annotation": " \"\"\"Complete slicing task and return knife to starting position\"\"\"",
+        "template": "def slice_potato():\n    # 0: SubTask 1: Slice the Potato\n    # 1: Go to the Knife.\n    GoToObject('Knife')\n    # 2: Pick up the Knife.\n    PickupObject('Knife')\n    # 3: Go to the Potato.\n    GoToObject('Potato')\n    # 4: Slice the Potato.\n    SliceObject('Potato')\n    # 5: Go to the countertop.\n    GoToObject('CounterTop')\n    # 6: Put the Knife back on the CounterTop.\n    PutObject('Knife', 'CounterTop')\n"
+    },
+    {
+        "instruction": " Send {robot3} to fetch the {Knife}, then have {robot1} slice the {Potato}.",
+        "annotation": " \"\"\"Guide robot3 to retrieve Knife and robot1 to perform slicing task\"\"\"",
+        "template": "def slice_potato(robot_list):\n    # robot_list = [robot1,robot3]\n    # 0: SubTask 1: Slice the Potato\n    # 1: Go to the Knife  using robot3.\n    GoToObject(robot_list[1],'Knife')\n    # 2: Pick up the Knife using robot3.\n    PickupObject(robot_list[1],'Knife')\n    # 3: Go to the Potato using robot3.\n    GoToObject(robot_list[1],'Potato')\n    # 4: Slice the Potato using robot1.\n    SliceObject(robot_list[0],'Potato')\n    # 5: Go to the countertop using robot3.\n    GoToObject(robot_list[1],'CounterTop')\n    # 6: Put the Knife back on the CounterTop using robot3.\n    PutObject(robot_list[1],'Knife', 'CounterTop')\n"
+    },
+    {
+        "instruction": " Retrieve the {Fork} from its location.",
+        "annotation": " \"\"\"Grasp and lift {Fork} from its position\"\"\"",
+        "template": "def pick_up_fork():\n    # 0: SubTask 1: Pick up the Fork\n    # 1: Go to the Fork.\n    GoToObject('Fork')\n    # 2: Pick up the Fork.\n    PickupObject('Fork')\n"
+    },
+    {
+        "instruction": " Discard the {fork} in the waste receptacle.",
+        "annotation": " \"\"\"Discard the fork in the designated trash container\"\"\"",
+        "template": "def throw_fork_in_trash():\n    # 0: SubTask 2: Throw the Fork in the Trash\n    # 1: Go to the GarbageCan.\n    GoToObject('GarbageCan')\n    # 2: Throw the Fork in the GarbageCan.\n    ThrowObject('Fork', 'GarbageCan')\n"
+    },
+    {
+        "instruction": " Deactivate the {LightSwitch}.",
+        "annotation": " \"\"\"Perform action to switch off the light\"\"\"",
+        "template": "def turn_off_light():\n    # 0: SubTask 1: Turn off the light\n    # 1: Go to the LightSwitch.\n    GoToObject('LightSwitch')\n    # 2: Switch off the LightSwitch.\n    SwitchOff('LightSwitch')\n"
+    },
+    {
+        "instruction": " Activate the {Faucet}.",
+        "annotation": " \"\"\"Commence water flow from the {Faucet}\"\"\"",
+        "template": "def turn_on_faucet():\n    # 0: SubTask 1: Turn on the faucet\n    # 1: Go to the Faucet.\n    GoToObject('Faucet')\n    # 2: Switch on the Faucet.\n    SwitchOn('Faucet')\n"
+    },
+    {
+        "instruction": " Slice the {Potato} using the {Knife}.",
+        "annotation": " \"\"\"Perform task sequence to slice Potato\"\"\"",
+        "template": "def slice_potato():\n    # 0: SubTask 1: Slice the Potato\n    # 1: Go to the Knife.\n    GoToObject('Knife')\n    # 2: Pick up the Knife.\n    PickupObject('Knife')\n    # 3: Go to the Potato.\n    GoToObject('Potato')\n    # 4: Slice the Potato.\n    SliceObject('Potato')\n    # 5: Go to the countertop.\n    GoToObject('CounterTop')\n    # 6: Put the Knife back on the CounterTop.\n    PutObject('Knife', 'CounterTop')\n"
+    },
+    {
+        "instruction": " Discard the {Fork} into the {GarbageCan}.",
+        "annotation": " \"\"\"Move the Fork to the GarbageCan and dispose of it\"\"\"",
+        "template": "def throw_fork_in_trash():\n    # 0: SubTask 1: Throw the Fork in the trash\n    # 1: Go to the Fork.\n    GoToObject('Fork')\n    # 2: Pick up the Fork.\n    PickupObject('Fork')\n    # 3: Go to the GarbageCan.\n    GoToObject('GarbageCan')\n    # 4: Throw the Fork in the GarbageCan.\n    ThrowObject('Fork', 'GarbageCan')\n"
+    },
+    {
+        "instruction": " Discard the {Spoon} into the {GarbageCan}.",
+        "annotation": " \"\"\"Toss the Spoon into the GarbageCan after collection\"\"\"",
+        "template": "def throw_spoon_in_trash():\n    # 0: SubTask 2: Throw the Spoon in the trash\n    # 1: Go to the Spoon.\n    GoToObject('Spoon')\n    # 2: Pick up the Spoon.\n    PickupObject('Spoon')\n    # 3: Go to the GarbageCan.\n    GoToObject('GarbageCan')\n    # 4: Throw the Spoon in the GarbageCan.\n    ThrowObject('Spoon', 'GarbageCan')\n"
+    },
+    {
+        "instruction": " Store the {Egg} in the {Fridge}.",
+        "annotation": " \"\"\"Place Egg inside the Fridge and close it\"\"\"",
+        "template": "def put_egg_in_fridge():\n    # 0: SubTask 1: Put an Egg in the Fridge\n    # 1: Go to the Egg.\n    GoToObject('Egg')\n    # 2: Pick up the Egg.\n    PickupObject('Egg')\n    # 3: go to the Fridge.\n    GoToObject('Fridge')\n    # 4: Open the Fridge.\n    OpenObject('Fridge')\n    # 5: place the Egg inside the Fridge\n    PutObject('Egg', 'Fridge')\n    # 6: Close the Fridge.\n    CloseObject('Fridge')\n"
+    },
+    {
+        "instruction": " Slice the {Apple} and place the Knife back on the {DiningTable}.",
+        "annotation": " \"\"\"Perform slicing an apple and returning the knife to the dining table\"\"\"",
+        "template": "def prepare_apple_slices():\n    # 0: SubTask 2: Prepare Apple Slices\n    # 1: Go to the Knife.\n    GoToObject('Knife')\n    # 2: Pick up the Knife.\n    PickupObject('Knife')\n    # 3: Go to the Apple.\n    GoToObject('Apple')\n    # 4: Cut the Apple into slices.\n    SliceObject('Apple')\n    # 5: Go to the diningtable.\n    GoToObject('DiningTable')\n    # 6: Put the Knife on the diningtable.\n    PutObject('Knife', 'DiningTable')\n"
+    },
+    {
+        "instruction": " Store the pot with {apple slices} in the {fridge}.",
+        "annotation": " \"\"\"Place apple slices in pot and refrigerate\"\"\"",
+        "template": "def place_pot_with_apple_slices():\n    # 0: SubTask 3: Place the Pot with Apple Slices in the Fridge\n    # 1: Go to the Apple slice.\n    GoToObject('Apple')\n    # 2: Pick up a slice of Apple.\n    PickupObject('Apple')\n    # 3: Go to the pot.\n    GoToObject('Pot')\n    # 4: Place the Apple slice in the pot.\n    PutObject('Apple', 'Pot')\n    # 5: Pick up the pot.\n    PickupObject('Pot')\n    # 6: Go to the refrigerator.\n    GoToObject('Fridge')\n    # 7: Open the Fridge, \n    OpenObject('Fridge')\n    # 8: Put the pot in the refrigerator.\n    PutObject('Pot', 'Fridge')\n    # 9: Close the Fridge.\n    CloseObject('Fridge')\n"
+    },
+    {
+        "instruction": " Cook the {Egg} and store it in the {Fridge}.",
+        "annotation": " \"\"\"Cook egg in microwave and place it in the fridge\"\"\"",
+        "template": "def cook_egg_and_put_in_fridge():\n    # 0: SubTask 1: Cook an Egg and put it back inside the Fridge\n    # 1: go to the fridge\n    GoToObject('Egg')\n    # 2: pick up the egg\n    PickupObject('Egg')\n    # 3: walk towards the microwave\n    GoToObject('Microwave')\n    # 4: open the microwave door\n    OpenObject('Microwave')\n    # 5: Put the Egg inside the Microwave\n    PutObject('Egg', 'Microwave')\n    # 6: Close the Microwave\n    CloseObject('Microwave')\n    # 7: Switch on Microwave\n    SwitchOn('Microwave')\n    # 8: Wait for a while to let the egg cook.\n    time.sleep(5)\n    # 9: Switch off Microwave\n    SwitchOff('Microwave')\n    # 10: Open the Microwave door\n    OpenObject('Microwave')\n    # 11: Take the Egg out\n    PickupObject('Egg')\n    # 12: Close the Microwave\n    CloseObject('Microwave')\n    # 11: Go to the Fridge\n    GoToObject('Fridge')\n    # 12: Open the Fridge\n    OpenObject('Fridge')\n    # 13: Put the Egg inside to cool it\n    PutObject('Egg', 'Fridge')\n    # 14: Close the Fridge\n    CloseObject('Fridge')\n"
+    },
+    {
+        "instruction": " Chill the {Bread} then place it on the {CounterTop}.",
+        "annotation": " \"\"\"Cool down bread in fridge and then set it on counter\"\"\"",
+        "template": "def chill_bread_and_put_on_counter():\n    # 0: SubTask 2: Chill the bread from the counter then put it on the counter\n    # 1: Go to the Bread\n    GoToObject('Bread')\n    # 2: Grab the bread\n    PickupObject('Bread')\n    # 3: Go to Fridge.\n    GoToObject('Fridge')\n    # 4: Open Fridge\n    OpenObject('Fridge')\n    # 5: Put Bread in Fridge\n    PutObject('Bread', 'Fridge')\n    # 6: Close Fridge\n    CloseObject('Fridge')\n    # 7: Wait for a while to let the bread c0ol.\n    time.sleep(5)\n    # 8: Open Fridge\n    OpenObject('Fridge')\n    # 9: Take bread out\n    PickupObject('Bread')\n    # 10: Close Fridge\n    CloseObject('Fridge')\n    # 11: Go to the counter.\n    GoToObject('Countertop')\n    # 12: Put the bread on the counter.\n    PutObject('Bread', 'CounterTop')\n"
+    },
+    {
+        "instruction": " Slice the {Lettuce}, {Tomato}, and {Bread} for preparation.",
+        "annotation": " \"\"\"Slice required ingredients for meal prepping\"\"\"",
+        "template": "def slice_ingredients():\n    # 0: SubTask 1: Slice the Lettuce, Tomato, and Bread\n    # 1: Go to the Knife.\n    GoToObject('Knife')\n    # 2: Pick up the Knife.\n    PickupObject('Knife')\n    # 3: Go to the Lettuce.\n    GoToObject('Lettuce')\n    # 4: Slice the Lettuce.\n    SliceObject('Lettuce')\n    # 5: Go to the Tomato.\n    GoToObject('Tomato')\n    # 6: Slice the Tomato.\n    SliceObject('Tomato')\n    # 7: Go to the Bread.\n    GoToObject('Bread')\n    # 8: Slice the Bread.\n    SliceObject('Bread')\n    # 9: Go to the countertop.\n    GoToObject('CounterTop')\n    # 10: Put the Knife back on the CounterTop.\n    PutObject('Knife', 'CounterTop')\n"
+    },
+    {
+        "instruction": " Clean the {Plate} at the {Sink} and place it on the {CounterTop}.",
+        "annotation": " \"\"\"Automate washing a plate and placing it on the countertop\"\"\"",
+        "template": "def wash_plate():\n    # 0: SubTask 2: Wash the Plate\n    # 1: Go to the Plate.\n    GoToObject('Plate')\n    # 2: Pick up the Plate.\n    PickupObject('Plate')\n    # 3: Go to the Sink.\n    GoToObject('Sink')\n    # 4: Put the plate inside the sink\n    PutObject('Plate', 'Sink')\n    # 5: Switch on the Faucet to clean the Plate\n    SwitchOn('Faucet')\n    # 6: Wait for a while to let the plate clean.\n    time.sleep(5)\n    # 7: Switch off the Faucet\n    SwitchOff('Faucet')\n    # 8: Pick up the clean Plate.\n    PickupObject('Plate')\n    # 9: Go to the CounterTop.\n    GoToObject('CounterTop')\n    # 10: Place the Plate on the CounterTop\n    PutObject('Plate', 'CounterTop')\n"
+    },
+    {
+        "instruction": " Assemble a sandwich with {Bread}, {Lettuce}, and {Tomato} on the {Plate}.",
+        "annotation": " \"\"\"Sequence actions to construct a sandwich with the specified ingredients\"\"\"",
+        "template": "def assemble_sandwich():\n    # 0: SubTask 3: Assemble the Sandwich\n    # 1: Go to the Bread slice.\n    GoToObject('Bread')\n    # 2: Pick up the Bread slice.\n    PickupObject('Bread')\n    # 3: Go to the Plate.\n    GoToObject('Plate')\n    # 4: Place a slice of Bread on the Plate\n    PutObject('Bread', 'Plate')\n    # 5: Go to the Lettuce.\n    GoToObject('Lettuce')\n    # 6: Pick up the Lettuce.\n    PickupObject('Lettuce')\n    # 7: Go to the Plate.\n    GoToObject('Plate')\n    # 8: Place a slice of Lettuce on the Plate\n    PutObject('Lettuce', 'Plate')\n    # 9: Go to the Tomato.\n    GoToObject('Tomato')\n    # 10: Pick up the Tomato.\n    PickupObject('Tomato')\n    # 11: Go to the Plate.\n    GoToObject('Plate')\n    # 12: Place a slice of Tomato on the Plate\n    PutObject('Tomato', 'Plate')\n    # 13: Go to another Bread slice.\n    GoToObject('Bread')\n    # 14: Pick up the Bread slice.\n    PickupObject('Bread')\n    # 15: Go to the Plate.\n    GoToObject('Plate')\n    # 17: Place another slice of Bread on top of the Plate.\n    PutObject('Bread', 'Plate')\n"
+    },
+    {
+        "instruction": " Slice the {Potato} at the countertop.",
+        "annotation": " \"\"\"Perform slicing of the {Potato} after fetching the {Knife}\"\"\"",
+        "template": "def prepare_potato():\n    # 0: SubTask 1: Prepare the Potato\n    # 1: Go to the Knife.\n    GoToObject('Knife')\n    # 2: Pick up the Knife.\n    PickupObject('Knife')\n    # 3: Go to the Potato.\n    GoToObject('Potato')\n    # 4: Slice the Potato.\n    SliceObject('Potato')\n    # 5: Go to the countertop.\n    GoToObject('CounterTop')\n    # 6: Put the Knife back on the CounterTop.\n    PutObject('Knife', 'CounterTop')\n"
+    },
+    {
+        "instruction": " Fry the sliced {Potato} on the {StoveBurner}.",
+        "annotation": " \"\"\"Initiate frying process for the Potato on the StoveBurner\"\"\"",
+        "template": "def fry_potato():\n    # 0: SubTask 2: Fry the Potato\n    # 1: Go to the sliced Potato.\n    GoToObject('Potato')\n    # 2: Pick up the sliced Potato.\n    PickupObject('Potato')\n    # 3: Go to the Pan.\n    GoToObject('Pan')\n    # 4: Put the sliced Potato in the Pan.\n    PutObject('Potato', 'Pan')\n    # 5: Pick up the pan with potato in it.\n    PickupObject('Pan')\n    # 6: Go to the StoveBurner.\n    GoToObject('StoveBurner')\n    # 7: Put the Pan on the stove burner.\n    PutObject('Pan', 'StoveBurner')\n    # 7: Switch on the StoveKnob.\n    SwitchOn('StoveKnob')\n    # 7: Wait for a while to let the Potato fry.\n    time.sleep(5)\n    # 8: Switch off the StoveKnob.\n    SwitchOff('StoveKnob')\n    # 9: Go to the Potato.\n    GoToObject('Potato')\n    # 10: Pick up the Potato.\n    PickupObject('Potato')\n    # 11: Go to the Plate.\n    GoToObject('Plate')\n    # 12: Put the fried Potato on the Plate.\n    PutObject('Potato', 'Plate')\n"
+    },
+    {
+        "instruction": " Store the {apple} inside the {fridge}.",
+        "annotation": " \"\"\"Insert apple into fridge and secure by closing\"\"\"",
+        "template": "def put_apple_in_fridge():\n    # 0: SubTask 1: Put apple in the fridge\n    # 1: Go to the Apple.\n    GoToObject('Apple')\n    # 2: Pick up the Apple.\n    PickupObject('Apple')\n    # 3: Go to the Fridge.\n    GoToObject('Fridge')\n    # 4: Open the Fridge.\n    OpenObject('Fridge')\n    # 5: Put Apple in the Fridge\n    PutObject('Apple', 'Fridge')\n    # 6: Close Fridge\n    CloseObject('Fridge')\n"
+    },
+    {
+        "instruction": " Slide the {block} to the {hole}.",
+        "annotation": " \"\"\"Move block to hole by sliding along both X and Y axes\"\"\"",
+        "template": "def main():\n    # Define safe height for the block\n    block_height = 5\n\n    # Get the position of the block\n    block_pos = get_position(\"block\")\n\n    # Get the position of the hole\n    hole_pos = get_position(\"hole\")\n\n    # Move the arm to the side of the block\n    move_to([block_pos[0] - 5, block_pos[1], block_height])\n\n    # Push the block in the X direction towards the hole\n    move_to([block_pos[0] + (hole_pos[0] - block_pos[0]), block_pos[1], block_height])\n\n    # Move the arm to the side of the block\n    move_to([block_pos[0], block_pos[1] - 5, block_height])\n\n    # Push the block in the Y direction towards the hole\n    move_to([block_pos[0], block_pos[1] + (hole_pos[1] - block_pos[1]), block_height])\n"
+    },
+    {
+        "instruction": " Safely lift the {object_name}.",
+        "annotation": " \"\"\"Grasp and elevate the {object_name} after reaching its position.\"\"\"",
+        "template": "def pick_up_object(object_name):\n    # get the position of the object\n    object_pos = get_position(object_name)\n    \n    # move the robot arm to a safe position above the object\n    safe_pos = [object_pos[0], object_pos[1], object_pos[2]+100, object_pos[3], object_pos[4], object_pos[5]]\n    move_to(safe_pos)\n    \n    # move the robot arm to the object's position\n    move_to(object_pos)\n    \n    # grab the object\n    grab()\n    time.sleep(1) # wait for the object to be firmly attached\n    \n    # move the robot arm back to the safe position above the object\n    move_to(safe_pos)\n"
+    },
+    {
+        "instruction": " Securely deposit the {item} at the designated coordinates.",
+        "annotation": " \"\"\"Perform the object placement cycle with elevation safety margin.\"\"\"",
+        "template": "def place_object(position):\n    # move the robot arm to a safe position above the target location\n    safe_pos = [position[0], position[1], position[2]+100, position[3], position[4], position[5]]\n    move_to(safe_pos)\n    \n    # move the robot arm to the target location\n    move_to(position)\n    \n    # release the object\n    release()\n    \n    # move the robot arm back to the safe position above the target location\n    move_to(safe_pos)\n"
+    },
+    {
+        "instruction": " Move the {green block} atop the {white pad}.",
+        "annotation": " \"\"\"Position green block 40 units above the white pad\"\"\"",
+        "template": "def main():\n    # get the positions of the green block and white pad\n    green_pos = get_position(\"green block\")\n    white_pos = get_position(\"white pad\")\n\n    # pick up the green block\n    pick_up_object(\"green block\")\n\n    # calculate the position to place the block on the white pad\n    place_pos = [white_pos[0], white_pos[1], white_pos[2]+40, 0, 0, 0]\n\n    # place the block on the white pad\n    place_object(place_pos)\n"
+    },
+    {
+        "instruction": " Navigate to coordinates ({x}, {y}) facing east then north.",
+        "annotation": " \"\"\"Guide the robot to target by turning and moving along axes\"\"\"",
+        "template": "def move_embodied_agent_to_target(x, y):\n  # rotate to face east\n  turn_right()\n  \n  # move forward until we reach the target x position\n  while x > 0:\n    move_forward()\n    x -= 1\n  \n  # rotate to face north\n  turn_right()\n  \n  # move forward until we reach the target y position\n  while y > 0:\n    move_forward()\n    y -= 1\n"
+    },
+    {
+        "instruction": " Drive towards the coordinates {x, y}.",
+        "annotation": " \"\"\"Adjust steering angle to reach prescribed coordinates\"\"\"",
+        "template": "def move_car_to_target(x, y):\n  # get the initial position\n  current_pos = get_position()\n  target_pos = (x, y, 0)\n  \n  # calculate the angle to target position\n  angle = math.atan2(target_pos[1]-current_pos[1], target_pos[0]-current_pos[0])\n  \n  # set initial steering angle\n  set_steering_angle(angle)\n  set_velocity(1)\n  \n  # continuously update the steering angle as the car moves\n  while current_pos[0] != target_pos[0] or current_pos[1] != target_pos[1]:\n    current_pos = get_position()\n    angle = math.atan2(target_pos[1]-current_pos[1], target_pos[0]-current_pos[0])\n    set_steering_angle(angle)\n  \n  # stop the car\n  set_velocity(0)\n"
+    },
+    {
+        "instruction": " Fly the drone to the coordinates {x, y, z}.",
+        "annotation": " \"\"\"Move the drone to specified x, y, z using pitch and yaw\"\"\"",
+        "template": "def move_drone_to_target(x, y, z):\n  # take off\n  set_height(1)\n  \n  # fly to the target x and y position\n  angle = math.atan2(y, x)\n  set_yaw(angle)\n  set_pitch(45)\n  \n  # continuously update the drone position\n  current_pos = get_position()\n  while current_pos[0] != x or current_pos[1] != y:\n    current_pos = get_position()\n  \n  # fly to the target z position\n  set_pitch(0)\n  set_height(z)\n  \n  # land\n  set_height(0)\n"
+    },
+    {
+        "instruction": " Knock the {milk} with the {hammer} then pick up the {milk}.",
+        "annotation": " \"\"\"Move the hammer to strike milk, then grasp the milk.\"\"\"",
+        "template": "def main():\n    # Get the position of the hammer\n    hammer_position = get_position('hammer')\n\n    # Move the gripper to the hammer's position\n    target_position = hammer_position + np.array([0.0, 0.0, get_size('hammer')[2]/2 - 0.03])\n    move_to_position(target_position)\n\n    # Close the gripper to grasp the hammer\n    close_gripper()\n\n    # Get the updated position of the milk\n    milk_position = get_position('milk')\n\n    # Calculate the direction from the hammer to the milk\n    direction = (milk_position - hammer_position) / np.linalg.norm(milk_position - hammer_position)\n\n    # Move the grasped hammer to make contact with the milk\n    target_position = milk_position - 0.5 * get_size('hammer')[0] * direction\n    move_to_position(target_position)\n\n    # Push the milk into the workspace\n    target_position = [0.0, 0.0, milk_position[2]]\n    move_to_position(target_position)\n\n    # Release the hammer\n    open_gripper()\n\n    # Get the updated position of the milk\n    milk_position = get_position('milk')\n\n    # Move the gripper to the milk's position\n    target_position = milk_position + np.array([0.0, 0.0, get_size('milk')[2]/2 - 0.03])\n    move_to_position(target_position)\n\n    # Close the gripper to grasp the milk\n    close_gripper()\n"
+    },
+    {
+        "instruction": " Move the {surfboard} between the two sofas and position the {robot} accordingly.",
+        "annotation": " \"\"\"Place surfboard equidistant from sofas and move robot to calculated position\"\"\"",
+        "template": "def main():\n    # Get the positions and sizes of the objects\n    sofa_1_position, _ = get_position('sofa_1')\n    sofa_2_position, _ = get_position('sofa_2')\n    sofa_2_size = get_size('sofa_2')\n    robot_size = get_size('robot')\n\n    # Calculate the target position for the surfboard\n    surfboard_target_position = [(sofa_1_position[0] + sofa_2_position[0]) / 2, sofa_1_position[1], sofa_1_position[2]]\n\n    # Push the surfboard to the target position\n    push_to_position('surfboard', surfboard_target_position)\n\n    # Calculate the target position for the robot\n    robot_target_position = [sofa_2_position[0], sofa_2_position[1], sofa_2_size[2] + robot_size[2] / 2]\n\n    # Walk to the target position\n    walk_to_position(robot_target_position)\n"
+    },
+    {
+        "instruction": " Use the {stick} to nudge the {can} then place the {strip of paper} next to it.",
+        "annotation": " \"\"\"Nudge can with stick, place paper alongside\"\"\"",
+        "template": "def main():\n    # Get the stick's position\n    stick_position = get_position('stick')\n\n    # Get the stick's size\n    stick_size = get_size('stick')\n\n    # Move the gripper close to the stick before grasping it\n    move_to_position(stick_position + np.array([0.0, 0.0, stick_size[2]/2 - 0.03]))\n\n    # Grasp the stick\n    close_gripper()\n\n    # Get the can's position\n    can_position = get_position('can')\n\n    # Move the grasped stick to make contact with the can\n    move_to_position(can_position - np.array([stick_size[2]/2, 0.0, 0.0]))\n\n    # Push the can closer to the strip of paper along the y-axis\n    move_to_position(stick_position + np.array([0.0, 0.23, 0.0]))\n\n    # Release the stick\n    open_gripper()\n\n    # Get the strip of paper's position\n    paper_position = get_position('strip of paper')\n\n    # Get the paper's size\n    paper_size = get_size('strip of paper')\n\n    # Move the gripper close to the strip of paper before grasping it\n    move_to_position(paper_position + np.array([0.0, 0.0, paper_size[2]/2 - 0.03]))\n\n    # Grasp the strip of paper\n    close_gripper()\n\n    # Drag the strip of paper in the negative x direction\n    move_to_position(np.array([0.0, paper_position[1], paper_position[2]]))\n\n    # Release the strip of paper\n    open_gripper()\n\n    # Get the can's position\n    can_position = get_position('can')\n\n    # Get the can's size\n    can_size = get_size('can')\n\n    # Move the gripper close to the can before grasping it\n    move_to_position(can_position + np.array([0.0, 0.0, can_size[2]/2 - 0.03]))\n\n    # Grasp the can\n    close_gripper()\n"
+    },
+    {
+        "instruction": " Move {box_2} next to {box_1}, then ascend {box_2}, {box_1}, and the {sofa}.",
+        "annotation": " \"\"\"Sequence relocation of box_2 and robot climbing maneuvers on box_2, box_1, and sofa\"\"\"",
+        "template": "def main():\n    # Get the position and size of box_1\n    box_1_position, _ = get_position('box_1')\n    box_1_size = get_size('box_1')\n\n    # Get the position and size of box_2\n    box_2_position, _ = get_position('box_2')\n    box_2_size = get_size('box_2')\n\n    # Calculate the target position for box_2\n    target_box_2_position = [box_1_position[0] - box_1_size[0]/2 - box_2_size[0]/2 - 0.01, box_1_position[1], box_1_position[2]]\n\n    # Push box_2 to the target position\n    push_to_position('box_2', target_box_2_position)\n\n    # Get the updated position of box_2\n    box_2_position, _ = get_position('box_2')\n\n    # Get the size of the robot\n    robot_size = get_size('robot')\n\n    # Calculate the target position for the robot to climb onto box_2\n    target_robot_position = [box_2_position[0], box_2_position[1], box_2_size[2]+robot_size[2]/2]\n\n    # Climb onto box_2\n    climb_to_position(target_robot_position)\n\n    # Get the updated position and size of box_1\n    box_1_position, _ = get_position('box_1')\n    box_1_size = get_size('box_1')\n\n    # Calculate the target position for the robot to climb onto box_1\n    target_robot_position = [box_1_position[0], box_1_position[1], box_1_size[2]+robot_size[2]/2]\n\n    # Climb onto box_1\n    climb_to_position(target_robot_position)\n\n    # Get the position and size of the sofa\n    sofa_position, _ = get_position('sofa')\n    sofa_size = get_size('sofa')\n\n    # Calculate the target position for the robot to climb onto the sofa\n    target_robot_position = [sofa_position[0], sofa_position[1], sofa_size[2]+robot_size[2]/2]\n\n    # Climb onto the sofa\n    climb_to_position(target_robot_position)\n"
+    },
+    {
+        "instruction": " Stack {magnetic_cube1} onto {magnetic_cube2}, then attach {magnetic_cube3} and press the {button}.",
+        "annotation": " \"\"\"Attach and reposition cubes to press a button\"\"\"",
+        "template": "def main():\n    # Get the position of magnetic_cube1\n    magnetic_cube1_position = get_position('magnetic_cube1')\n\n    # Get the size of magnetic_cube1\n    magnetic_cube1_size = get_size('magnetic_cube1')\n\n    # Move the gripper to the magnetic_cube1's position\n    move_to_position(magnetic_cube1_position + np.array([0.0, 0.0, magnetic_cube1_size[2]/2 - 0.03]))\n\n    # Close the gripper to grasp the magnetic_cube1\n    close_gripper()\n\n    # Get the position of magnetic_cube2\n    magnetic_cube2_position = get_position('magnetic_cube2')\n\n    # Move the magnetic_cube1 to make contact with the magnetic_cube2\n    move_to_position(magnetic_cube2_position - np.array([magnetic_cube1_size[0]/2, 0.0, 0.0]))\n\n    # Get the position of magnetic_cube3\n    magnetic_cube3_position = get_position('magnetic_cube3')\n\n    # Move the attached cubes to make contact with the magnetic_cube3\n    move_to_position(magnetic_cube3_position - np.array([magnetic_cube1_size[0], 0.0, 0.0]))\n\n    # Get the position of the button\n    button_position = get_position('button')\n\n    # Move the attached cubes to press the button\n    move_to_position(button_position + np.array([magnetic_cube1_size[0], 0.0, 0.0]))\n"
+    },
+    {
+        "instruction": " Move the {chair} one meter westward, then have the {robot} step onto the {surfboard}.",
+        "annotation": " \"\"\"Robot pushes chair and steps onto surfboard\"\"\"",
+        "template": "def main():\n    # Get the current position of the chair\n    chair_position, chair_orientation = get_position('chair')\n\n    # Calculate the target position for the chair\n    target_chair_position = np.array([chair_position[0]-1, chair_position[1], chair_position[2]])\n\n    # Push the chair to the target position\n    push_to_position('chair', target_chair_position)\n\n    # Get the current position and size of the surfboard\n    surfboard_position, surfboard_orientation = get_position('surfboard')\n    surfboard_size = get_size('surfboard')\n\n    # Get the size of the robot\n    robot_size = get_size('robot')\n\n    # Calculate the target position for the robot to walk onto the surfboard\n    target_robot_position = np.array([surfboard_position[0], surfboard_position[1], surfboard_size[2]+robot_size[2]/2])\n\n    # Walk to the target position on the surfboard\n    walk_to_position(target_robot_position)"
+    }
+]

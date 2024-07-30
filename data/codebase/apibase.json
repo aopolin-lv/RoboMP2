@@ -1,0 +1,212 @@
+{
+    "GetObsImage": [
+        "def GetObsImage(obs) -> List[Image.Image, Image.Image]:\n",
+        "    \"\"\"Get the current top and front image to start the system.\n",
+        "    Examples:\n",
+        "        top_image, front_image = GetObsImage(obs) # if the task require the front image\n",
+        "        top_image, _ = GetObsImage(obs)\n",
+        "    \"\"\"\n",
+        "    pass\n"
+    ],
+    "GetPromptImages": [
+        "def GetPromptImages(all_images: dict) -> Dict:\n",
+        "    \"\"\"Get prompt_images from all_images to start the system. Note! all_images is global variable and just use it.\n",
+        "    Examples:\n",
+        "        prompt_images = GetPromptImages(all_images=all_images)\n",
+        "    \"\"\"\n",
+        "    pass\n"
+    ],
+    "GetSceneImage": [
+        "def GetSceneImage(all_images: dict) -> Dict:\n",
+        "    \"\"\"Get scene_image from all_images to start the system. Note! all_images is global variable and just use it.\n",
+        "    Examples:\n",
+        "        scene_image = GetSceneImage(all_images=all_images)\n",
+        "    \"\"\"\n",
+        "    pass\n"
+    ],
+    "GetPromptAssets": [
+        "def GetPromptAssets(prompt_assets: dict) -> dict:\n",
+        "    \"\"\"Get the prompt_assets in sweep task and novel task\n",
+        "    Examples:\n",
+        "        prompt_assets = GetPromptAssets(prompt_assets)\n",
+        "    \"\"\"\n",
+        "    pass\n"
+    ],
+    "GetWholeTask": [
+        "def GetWholeTask(task: str) -> str:\n",
+        "    \"\"\"Get the whole_task\n",
+        "    Examples:\n",
+        "        whole_task = GetWholeTask(whole_task=whole_task)\n",
+        "    \"\"\"\n",
+        "    pass\n"
+    ],
+    "MMPROBO.generate": [
+        "class MMPROBO:\n",
+        "    def generate(image: np.ndarray, query: str) -> list:\n",
+        "    \"\"\"Generate the coordinate of query object according to the image. Note, this method is only used for one object,if you want to find all objects' coordinate,please use GetAllObjectsFromImage or GetAllObjectsFromPromptImage instead!\"\"\"\n",
+        "    pass\n",
+        "\n"
+    ],
+    "GetAllObjectsFromImage": [
+        "def GetAllObjectsFromImage(image: np.ndarray) -> list:\n",
+        "    \"\"\"Get all objects from image.Note, this can only get all objects from a image, can't get all objects with the same shape as a specific object\"\"\"\n",
+        "    pass\n",
+        "\n"
+    ],
+    "GetAllObjectsFromPromptImage": [
+        "def GetAllObjectsFromPromptImage(image: np.ndarray) -> list:\n",
+        "    \"\"\"Get all objects from prompt_image\"\"\"\n",
+        "    pass\n",
+        "\n"
+    ],
+    "GetAllSameTextureObjects": [
+        "def GetAllSameTextureObjects(image: np.ndarray, query: str) -> list:\n",
+        "    \"\"\"Get all objects with the same texture as query in image.\"\"\"\n",
+        "    pass\n",
+        "\n"
+    ],
+    "GetAllSameProfileObjects": [
+        "def GetAllSameProfileObjects(image: np.ndarray, query: str) -> list:\n",
+        "    \"\"\"Get all objects with the same profile as query in image. Note! This is different from GetAllSameTextureObjects!\"\"\"\n",
+        "    pass\n",
+        "\n"
+    ],
+    "GetSameShapeObjectsAsObject": [
+        "def GetSameShapeObjectsAsObject(image: np.ndarray, query: str) -> list:\n",
+        "    \"\"\"Get all objects with the same shape as object\"\"\"\n",
+        "    pass\n",
+        "\n"
+    ],
+    "GetObjectsWtihGivenTexture": [
+        "def GetObjectsWtihGivenTexture(image: np.ndarray, query: str) -> list:\n",
+        "    \"\"\"Get all objects with the same texture as object. Note: this method need 2 parameters\"\"\"\n",
+        "    pass\n",
+        "\n"
+    ],
+    "GetDragObjName": [
+        "def GetDragObjName(prompt_assets: dict) -> str:\n",
+        "    \"\"\"Get the prompt_drag_obj_name in novel task\"\"\"\n",
+        "    pass\n",
+        "\n"
+    ],
+    "GetBaseObjName": [
+        "def GetBaseObjName(prompt_assets: dict) -> str:\n",
+        "    \"\"\"Get the prompt_base_obj_name in novel task\"\"\"\n",
+        "    pass\n",
+        "\n"
+    ],
+    "PickPlace": [
+        "def PickPlace(pick: list, place: list, bounds: np.ndarray, yaw_angle: float = None, degrees: bool = True, tool: str = \"suction\") -> str:\n",
+        "    \"\"\"Pick and place the object based on given locations and bounds\"\"\"\n",
+        "    pass\n",
+        " \n"
+    ],
+    "DistractorActions": [
+        "def DistractorActions(source: list, target: list, bounds: np.ndarray) -> list:\n",
+        "    \"\"\"Remove source objects that conflict with the target object list\"\"\"\n",
+        "    pass\n",
+        "\n"
+    ],
+    "RearrangeActions": [
+        "def RearrangeActions(source: list, target: list, bounds: np.ndarray) -> list:\n",
+        "    \"\"\"Composite multiple pick and place actions\"\"\"\n",
+        "    pass\n",
+        "\n"
+    ],
+    "SelectFromScene": [
+        "def SelectFromScene(obs_obj_dict: dict, scene_obj_dict: dict, texture: str) -> list:\n",
+        "    \"\"\"Select objects from obs_obj_dict that are in scene_obj_dict and meet the given texture.\"\"\"\n",
+        "    pass\n",
+        "\n"
+    ],
+    "GetStepsLocForObject": [
+        "def GetStepsLocForObject(image: np.ndarray, query: str): -> list, list, list:\n",
+        "    \"\"\"Get step0_loc, step1_loc, step2_loc from the prompt_images, used in follow_motion task. e.g. step0_loc, step1_loc, step2_loc = GetStepsLocForObject(image=prompt_images,query=query)\"\"\"\n",
+        "    pass\n",
+        "\n"
+    ],
+    "GetAllObjextsStepsLoc": [
+        "def GetAllObjextsStepsLoc(image: np.ndarray): -> list, list, list:\n",
+        "    \"\"\"Get step0_objs_loc, step1_objs_loc, step2_objs_loc from the prompt_images, used in follow_order task. e.g. step0_objs_loc, step1_objs_loc, step2_objs_loc = GetAllObjextsStepsLoc(image=prompt_images)\"\"\"\n",
+        "    pass\n",
+        "\n"
+    ],
+    "SelectObj": [
+        "def SelectObj(front_image: np.ndarray, drag_objs_top_loc: list, drag_objs_front_loc: list, novel_adj: str) -> list:\n",
+        "    \"\"\"Select one object meet the adj according to the front view of image, top view of object location and front view of object location. Use this method in novel_adj and noval_adj_and_noun tasks!\"\"\"\n",
+        "    pass\n",
+        "\n"
+    ],
+    "RotateAll": [
+        "def RotateAll(obj_list: list, degree: float, bounds: np.ndarray) -> list:\n",
+        "    \"\"\"Rotate all objects in the given degree\"\"\"\n",
+        "    pass\n",
+        "\n"
+    ],
+    "RecDegree": [
+        "def RecDegree(image_prompt: list) -> float:\n",
+        "    \"\"\"Identify the rotation angle of the picture sequence\"\"\"\n",
+        "    pass\n",
+        "\n"
+    ],
+    "RecAdj": [
+        "def RecAdj(prompt_images: list, is_reverse: bool) -> str:\n",
+        "    \"\"\"Recognize the novel adj from image_prompt\"\"\"\n",
+        "    pass\n",
+        "\n"
+    ],
+    "PlanOrder": [
+        "def PlanOrder(step0_objs_loc: np.ndarray, step1_objs_loc: np.ndarray, step2_objs_loc: np.ndarray, bounds: np.ndarray) -> list:\n",
+        "    \"\"\"Follow orders to stack objects\"\"\"\n",
+        "    pass\n",
+        "\n"
+    ],
+    "CalculateValidArea": [
+        "def CalculateValidArea(boundary: list, constraint: list) -> tuple:\n",
+        "    \"\"\"Obatin the valid area\"\"\"\n",
+        "    pass\n",
+        "\n"
+    ],
+    "MultiPPWithConstrain": [
+        "def MultiPPWithConstrain(picks: list, target_table: dict, bounds: np.ndarray, times: int) -> list:\n",
+        "    \"\"\"Achieve multiple placement under limited conditions\"\"\"\n",
+        "    pass\n",
+        "\n"
+    ],
+    "MultiPPWithSame": [
+        "def MultiPPWithSame(picks: list, place: list, bounds: np.ndarray) -> list:\n",
+        "    \"\"\"Achieve multiple placement with the same texture or shape\"\"\"\n",
+        "    pass\n",
+        "\n"
+    ],
+    "GetReverse": [
+        "def GetReverse(whole_task: str) -> bool:\n",
+        "    \"\"\"Get the value of is_reverse\"\"\"\n",
+        "    pass\n",
+        "\n"
+    ],
+    "Sorted": [
+        "def Sorted(sweep_objs: list, valid_area: list) -> list:\n",
+        "    \"\"\"Use the Sorted method to sort sweep_objs.\"\"\"\n",
+        "    pass\n",
+        "\n"
+    ],
+    "GetSweptAndBoundaryName": [
+        "def GetSweptAndBoundaryName(prompt_images: list) -> str, str, str:\n",
+        "    \"\"\"Use the function to get swept_obj_name, bounds_name and constraint_name. e.g. swept_obj_name, bounds_name, constraint_name = GetSweptAndBoundaryName(prompt_assets=prompt_assets)\"\"\"\n",
+        "    pass\n",
+        "\n"
+    ],
+    "GetTimes": [
+        "def GetTimes(whole_task: str) -> str:\n",
+        "    \"\"\"Use this function to get the the object numbers in sweep task. e.g. times = GetTimes(whole_task=whole_task)\"\"\"\n",
+        "    pass\n",
+        "\n"
+    ],
+    "RobotExecution": [
+        "def RobotExecution(action) -> dict:\n",
+        "    \"\"\"Execute the robot, then return the exectation result as dict \"\"\"\n",
+        "    pass\n",
+        "\n"
+    ]
+}
