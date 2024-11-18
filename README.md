@@ -1,7 +1,7 @@
 <div align="center">
 <h2>RoboMP<sup>2</sup>: A Robotic Multimodal Perception-Planning Framework with Multimodal Large Language Models</h2>
 
-[**Qi Lv**](https://liheyoung.github.io/)<sup>1,2</sup> · [**Hao Li**](https://scholar.google.com/citations?user=NmHgX-wAAAAJ)<sup>1</sup> · [**Xiang Deng**](http://speedinghzl.github.io/)<sup>1&dagger;</sup> · [**Rui Shao**](https://xiaogang00.github.io/)<sup>1</sup> · [**Michael Yu Wang**](https://sites.google.com/site/jshfeng/)<sup>2</sup> · [**Liqiang Nie**](https://hszhao.github.io/)<sup>1&dagger;</sup>
+[**Qi Lv**](https://aopolin-lv.github.io/)<sup>1,2</sup> · [**Hao Li**](https://openreview.net/profile?id=~Hao_Li59)<sup>1</sup> · [**Xiang Deng**](https://xiang-deng-dl.github.io/)<sup>1&dagger;</sup> · [**Rui Shao**](https://rshaojimmy.github.io/)<sup>1</sup> · [**Michael Yu Wang**](https://scholar.google.com/citations?user=Oo7c22wAAAAJ&hl=zh-CN)<sup>2</sup> · [**Liqiang Nie**](https://liqiangnie.github.io/)<sup>1&dagger;</sup>
 
 <sup>1</sup>Harbin Institute of Technology (Shenzhen)&emsp;&emsp;&emsp;&emsp;<sup>2</sup>Great Bay University&emsp;&emsp;&emsp;&emsp;
 
