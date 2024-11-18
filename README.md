@@ -46,7 +46,7 @@ cd Depth-Anything
 pip install -r requirements.txt
 ```
 
-* If you can't install gym==2.21.0,which is necessary for this project,try the following two installation,then the gym will be installed successfully!
+* If you can't install gym==2.21.0,which is necessary for this project, try the following two installation, then the gym will be installed successfully!
 
   ```python
   pip install setuptools==65.5.0
@@ -59,7 +59,7 @@ pip install -r requirements.txt
 
 1. Change the OpenAI API-key in `data_process/gptutils.py`.
 
-2. Download the SentenceBert model and change the path of SentenceBert in `retrieval/similarity_retrieval.py`.
+2. Download the [SentenceBert model](https://github.com/UKPLab/sentence-transformers) and change the path of SentenceBert in `retrieval/similarity_retrieval.py`.
 
 3. Put the path of MLLM in `model/custom_model.py`.
 
