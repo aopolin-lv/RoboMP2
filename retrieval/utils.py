@@ -4,7 +4,7 @@ import numpy as np
 from transformers import AutoTokenizer, AutoModelForCausalLM,AutoConfig
 from transformers.trainer_utils import set_seed
 import torch
-from .similarity_retirval import *
+from .similarity_retrieval import *
 
 FULL_PROMPT_FILE_DICT = {
     "full_examples": "visual_programming_prompt/full_prompt.ini",

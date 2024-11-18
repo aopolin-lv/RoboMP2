@@ -1,6 +1,6 @@
 from data_process.utils import read_json, get_instruction
-from retrieval.similarity_retirval import cal_TF_IDF
-from .similarity_retirval import cal_sentence_bert_cls
+from retrieval.similarity_retrieval import cal_TF_IDF
+from .similarity_retrieval import cal_sentence_bert_cls
 
 all_codebase_path = "data/codebase/all_codebase.json"
 
