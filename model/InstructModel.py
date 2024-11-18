@@ -25,9 +25,7 @@ class CustomModel(InstructBlipForConditionalGeneration):
         self.language_projection = nn.Linear(self.config.vision_config.hidden_size, self.config.text_config.hidden_size)
 
         if lora_enable:
-            modules_to_save = ["embed_tokens"]
-            target_modules = ["q", "v"]#, "k_proj", "o_proj"]
-            # target_modules = ["q_proj", "k_proj", "v_proj", "o_proj", "gate_proj", "up_proj", "down_proj"]
+            target_modules = ["q", "v"]
             lora_config = LoraConfig(
                 r=8, lora_alpha=32, target_modules=target_modules, lora_dropout=0.1, bias="none", task_type="CAUSAL_LM",
                 # modules_to_save=modules_to_save
@@ -38,8 +36,6 @@ class CustomModel(InstructBlipForConditionalGeneration):
     def forward(
         self,
         pixel_values: torch.FloatTensor,
-        qformer_input_ids: torch.FloatTensor,
-        qformer_attention_mask: Optional[torch.LongTensor] = None,
         input_ids: Optional[torch.FloatTensor] = None,
         attention_mask: Optional[torch.LongTensor] = None,
         decoder_input_ids: Optional[torch.LongTensor] = None,
@@ -121,8 +117,6 @@ class CustomModel(InstructBlipForConditionalGeneration):
     def generate(
         self,
         pixel_values: torch.FloatTensor,
-        qformer_input_ids: Optional[torch.LongTensor] = None,
-        qformer_attention_mask: Optional[torch.LongTensor] = None,
         input_ids: Optional[torch.LongTensor] = None,
         attention_mask: Optional[torch.LongTensor] = None,
         **generate_kwargs,
@@ -159,9 +153,6 @@ class CustomModel(InstructBlipForConditionalGeneration):
             **generate_kwargs,
         )
 
-        # the InstructBLIP authors used inconsistent tokenizer/model files during training,
-        # with the tokenizer's bos token being set to </s> which has ID=2,
-        # whereas the model's text config has bos token id = 0
         if self.config.text_config.architectures[0] == "LLaMAForCausalLM":
             if isinstance(outputs, torch.Tensor):
                 outputs[outputs == 0] = 2

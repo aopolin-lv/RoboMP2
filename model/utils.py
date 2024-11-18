@@ -93,10 +93,6 @@ class ComputeMetric:
                     pred_text = {}
             pred_texts.append(pred_text)
 
-        # for debug
-        # from copy import copy
-        # pred_texts = [copy(x) for x in label_texts]
-
         # for box
         cnt_pre_c1_tp, cnt_pre_c3_tp, cnt_pre_c5_tp, cnt_pre_c75_tp, cnt_pre_c9_tp = 0, 0, 0, 0, 0
         cnt_rec_c1_tp, cnt_rec_c3_tp, cnt_rec_c5_tp, cnt_rec_c75_tp, cnt_rec_c9_tp = 0, 0, 0, 0, 0
@@ -109,17 +105,17 @@ class ComputeMetric:
         cnt_obj_pre, cnt_obj_rec = 0, 0
 
         for pred_text, label_text, _type in zip(pred_texts, label_texts, label_type):
-            # check合法性
+
             if not isinstance(pred_text, eval(_type)):
                 if _type == "list":
                     cnt_rec += len(label_text)
                 else:
                     cnt_recall_all_obj_rec += len(list(label_text.keys()))
                 continue
+
             if _type == "list":
                 pred_bbox = pred_text
                 for idx, item in enumerate(pred_bbox):
-                    # check合法性
                     if not isinstance(item, list) or len(item) != 4:
                         pred_bbox[idx] = [0, 0, 0, 0]
                     else:
@@ -127,7 +123,7 @@ class ComputeMetric:
                 label_bbox = [convert_bbox(x) for x in label_text]
                 iou = box_iou(torch.tensor(pred_bbox), torch.tensor(label_bbox))
 
-                # 计算pre
+                # pre
                 pre_iou = iou.max(dim=1)[0]
                 cnt_pre_c1_tp += (pre_iou > 0.1).sum().item()
                 cnt_pre_c3_tp += (pre_iou > 0.3).sum().item()
@@ -136,7 +132,7 @@ class ComputeMetric:
                 cnt_pre_c9_tp += (pre_iou > 0.9).sum().item()
                 cnt_pre += len(pred_bbox)
 
-                # 计算rec
+                # rec
                 rec_iou = iou.max(dim=0)[0]
                 cnt_rec_c1_tp += (rec_iou > 0.1).sum().item()
                 cnt_rec_c3_tp += (rec_iou > 0.3).sum().item()
@@ -162,7 +158,7 @@ class ComputeMetric:
                     label_obj_tp_bbox = [convert_bbox(x) for x in label_obj_tp_bbox]
                     iou = box_iou(torch.tensor(pred_obj_tp_bbox), torch.tensor(label_obj_tp_bbox))
 
-                    # 计算pre
+                    # pre
                     pre_obj_iou = iou.max(dim=1)[0]
                     cnt_obj_pre_c1_tp += (pre_obj_iou > 0.1).sum().item()
                     cnt_obj_pre_c3_tp += (pre_obj_iou > 0.3).sum().item()
@@ -171,7 +167,7 @@ class ComputeMetric:
                     cnt_obj_pre_c9_tp += (pre_obj_iou > 0.9).sum().item()
                     cnt_obj_pre += len(pred_obj_tp_bbox)
 
-                    # 计算rec
+                    # rec
                     rec_obj_iou = iou.max(dim=0)[0]
                     cnt_obj_rec_c1_tp += (rec_obj_iou > 0.1).sum().item()
                     cnt_obj_rec_c3_tp += (rec_obj_iou > 0.3).sum().item()
