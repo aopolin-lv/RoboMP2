@@ -71,10 +71,21 @@ pip install -r requirements.txt
 If you find this project useful, please consider citing:
 
 ```bibtex
-@inproceedings{lv2024robomp2,
-    title     = {RoboMP$2$: A Robotic Multimodal Perception-Planning Framework with Mutlimodal Large Language Models},
-    author    = {Qi Lv and Hao Li and Xiang Deng and Rui Shao and Michael Yu Wang and Liqiang Nie},
-    booktitle = {International Conference on Machine Learning},
-    year      = {2024}
+
+@InProceedings{pmlr-v235-lv24a,
+  title = 	 {{R}obo{MP}$^2$: A Robotic Multimodal Perception-Planning Framework with Multimodal Large Language Models},
+  author =       {Lv, Qi and Li, Hao and Deng, Xiang and Shao, Rui and Wang, Michael Y and Nie, Liqiang},
+  booktitle = 	 {Proceedings of the 41st International Conference on Machine Learning},
+  pages = 	 {33558--33574},
+  year = 	 {2024},
+  editor = 	 {Salakhutdinov, Ruslan and Kolter, Zico and Heller, Katherine and Weller, Adrian and Oliver, Nuria and Scarlett, Jonathan and Berkenkamp, Felix},
+  volume = 	 {235},
+  series = 	 {Proceedings of Machine Learning Research},
+  month = 	 {21--27 Jul},
+  publisher =    {PMLR},
+  pdf = 	 {https://raw.githubusercontent.com/mlresearch/v235/main/assets/lv24a/lv24a.pdf},
+  url = 	 {https://proceedings.mlr.press/v235/lv24a.html},
+}
+
 }
 ```
