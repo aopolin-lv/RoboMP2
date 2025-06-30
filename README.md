@@ -86,6 +86,4 @@ If you find this project useful, please consider citing:
   pdf = 	 {https://raw.githubusercontent.com/mlresearch/v235/main/assets/lv24a/lv24a.pdf},
   url = 	 {https://proceedings.mlr.press/v235/lv24a.html},
 }
-
-}
 ```
